@@ -1,1 +1,43 @@
-# MOCKINGGJAY.github.io
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockingjay</title>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 200%; /* Ensures there's enough content to scroll. Adjust as needed. */
+    background-color: #000080; /* Night blue background */
+    overflow-x: hidden;
+  }
+  .title {
+    position: fixed; /* Keeps the title in place while scrolling */
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: Arial, sans-serif;
+    font-size: 2em;
+    color: #FF4500; /* Red fire color */
+    text-align: center;
+    transition: opacity 0.5s ease;
+  }
+</style>
+</head>
+<body>
+
+<div class="title" id="title">MOCKINGJAY</div>
+
+<script>
+  window.onscroll = function() {
+    var scroll = document.documentElement.scrollTop || document.body.scrollTop;
+    var opacity = 1 - (scroll / 500); // Adjust the /500 to control fading speed
+    document.getElementById('title').style.opacity = opacity;
+  };
+</script>
+
+</body>
+</html>
+
