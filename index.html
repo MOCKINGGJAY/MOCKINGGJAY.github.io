@@ -24,20 +24,44 @@
     text-align: center;
     transition: opacity 0.5s ease;
   }
+  .warning {
+    position: fixed; /* Keeps the warning in place while scrolling */
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: Arial, sans-serif;
+    font-size: 1.5em;
+    color: yellow; /* Initial color */
+    text-align: center;
+    transition: color 0.5s ease;
+  }
 </style>
 </head>
 <body>
 
 <div class="title" id="title">MOCKINGJAY</div>
+<div class="warning" id="warning">Don't scroll down</div>
 
 <script>
   window.onscroll = function() {
     var scroll = document.documentElement.scrollTop || document.body.scrollTop;
-    var opacity = 1 - (scroll / 500); // Adjust the /500 to control fading speed
+    // Fade title
+    var opacity = 1 - (scroll / 500);
     document.getElementById('title').style.opacity = opacity;
+    
+    // Change warning color
+    var colorChangePoint = 200; // Point of color start change
+    var warning = document.getElementById('warning');
+    if (scroll > colorChangePoint) {
+      // Calculate color change (you can adjust this for a different effect)
+      var colorIntensity = Math.min(1, (scroll - colorChangePoint) / 300);
+      // Interpolate between yellow and sunrise orange based on scroll position
+      warning.style.color = `rgb(${255 + colorIntensity * (255 - 255)}, ${215 - colorIntensity * (215 - 140)}, 0)`; // Yellow to orange
+    } else {
+      warning.style.color = 'yellow';
+    }
   };
 </script>
 
 </body>
 </html>
-
