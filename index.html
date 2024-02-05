@@ -8,60 +8,92 @@
   body, html {
     margin: 0;
     padding: 0;
-    height: 200%; /* Ensures there's enough content to scroll. Adjust as needed. */
-    background-color: #000080; /* Night blue background */
+    height: 200%;
     overflow-x: hidden;
+    background-color: #FF4500; /* Fire red background */
+    transition: background-color 1s ease;
   }
-  .title {
-    position: fixed; /* Keeps the title in place while scrolling */
-    width: 100%;
+  .message {
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-family: Arial, sans-serif;
-    font-size: 2em;
-    color: #FF4500; /* Red fire color */
     text-align: center;
-    transition: opacity 0.5s ease;
+    display: none; /* Initially hidden */
   }
-  .warning {
-    position: fixed; /* Keeps the warning in place while scrolling */
-    top: 10%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-family: Arial, sans-serif;
-    font-size: 1.5em;
-    color: yellow; /* Initial color */
-    text-align: center;
-    transition: color 0.5s ease;
+  .title, .warning {
+    display: none; /* Initially hide the previous page content */
   }
 </style>
 </head>
 <body>
 
-<div class="title" id="title">MOCKINGJAY</div>
+<div id="initialMessage" class="message" style="color: lightblue;"></div>
+<div class="title" id="title"></div>
 <div class="warning" id="warning">Don't scroll down</div>
 
 <script>
-  window.onscroll = function() {
-    var scroll = document.documentElement.scrollTop || document.body.scrollTop;
-    // Fade title
-    var opacity = 1 - (scroll / 500);
-    document.getElementById('title').style.opacity = opacity;
-    
-    // Change warning color
-    var colorChangePoint = 200; // Point of color start change
-    var warning = document.getElementById('warning');
-    if (scroll > colorChangePoint) {
-      // Calculate color change (you can adjust this for a different effect)
-      var colorIntensity = Math.min(1, (scroll - colorChangePoint) / 300);
-      // Interpolate between yellow and sunrise orange based on scroll position
-      warning.style.color = `rgb(${255 + colorIntensity * (255 - 255)}, ${215 - colorIntensity * (215 - 140)}, 0)`; // Yellow to orange
-    } else {
-      warning.style.color = 'yellow';
-    }
-  };
-</script>
+  let messages = [
+    { text: "Launching rockets 🚀...", duration: 4000, color: "lightblue", backgroundColor: "#FF4500" },
+    { text: "Communicating with the satellite", duration: 3000, color: "purple", backgroundColor: "gray" },
+    { text: "Landing", duration: 5000, color: "black", backgroundColor: "white", bigText: true }
+  ];
 
-</body>
-</html>
+  function typeMessage(message, element, callback) {
+    let index = 0;
+    element.innerHTML = "";
+    element.style.color = message.color;
+    document.body.style.backgroundColor = message.backgroundColor;
+    if (message.bigText) {
+      element.style.fontSize = "3em";
+    } else {
+      element.style.fontSize = "2em";
+    }
+
+    let typingInterval = setInterval(() => {
+      if (index < message.text.length) {
+        element.innerHTML += message.text.charAt(index);
+        index++;
+      } else {
+        clearInterval(typingInterval);
+        callback();
+      }
+    }, 50);
+  }
+
+  function showMessage(index) {
+    if (index < messages.length) {
+      const initialMessage = document.getElementById('initialMessage');
+      initialMessage.style.display = "block";
+      typeMessage(messages[index], initialMessage, () => {
+        setTimeout(() => {
+          showMessage(index + 1);
+        }, messages[index].duration);
+      });
+    } else {
+      document.getElementById('initialMessage').style.display = "none";
+      startMockingjayPage();
+    }
+  }
+
+  showMessage(0);
+
+  function startMockingjayPage() {
+    document.body.style.backgroundColor = "#000080"; // Night blue
+    const title = document.getElementById('title');
+    title.innerHTML = "MOCKINGJAY";
+    title.style.color = "#FF4500";
+    title.style.display = "block";
+    document.getElementById('warning').style.display = "block";
+
+    let lastScrollTop = 0;
+    window.onscroll = function() {
+      var scroll = document.documentElement.scrollTop || document.body.scrollTop;
+      var opacity = 1 - (scroll / 500);
+      title.style.opacity = opacity;
+      
+      var colorChangePoint = 200;
+      if (scroll > colorChangePoint) {
+        var colorIntensity = Math.min(1, (scroll - colorChangePoint) / 300);
+        var r = Math.floor(0 + colorIntensity * (255
