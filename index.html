@@ -20,20 +20,23 @@
     font-family: Arial, sans-serif;
     text-align: center;
   }
-  .title, .warning {
-    display: none; /* Initially hide the previous page content */
-    text-align: center;
-    width: 100%;
-  }
   .title {
     font-size: 2em;
     position: fixed;
     top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
+    color: #FF4500;
+    display: none;
   }
   .warning {
     font-size: 1.5em;
+    color: red;
+    text-align: center;
+    width: 100%;
+    position: fixed;
+    top: 60%;
+    display: none;
   }
 </style>
 </head>
@@ -46,8 +49,8 @@
 <script>
   let messages = [
     { text: "Launching rockets 🚀...", duration: 4000, color: "lightblue", backgroundColor: "#FF4500" },
-    { text: "Communicating with the satellite", duration: 3000, color: "purple", backgroundColor: "gray" },
-    { text: "Landing", duration: 2000, color: "black", backgroundColor: "white", bigText: true }
+    { text: "Communicating with the satellite...", duration: 3000, color: "purple", backgroundColor: "gray" },
+    { text: "Landing...", duration: 2000, color: "black", backgroundColor: "white", bigText: true }
   ];
 
   function typeMessage(message, element, callback) {
@@ -92,22 +95,27 @@
   function startMockingjayPage() {
     document.body.style.backgroundColor = "#000080"; // Night blue
     const title = document.getElementById('title');
-    title.style.color = "#FF4500";
     title.style.display = "block";
-    document.getElementById('warning').style.display = "block";
+    const warning = document.getElementById('warning');
+    warning.style.display = "block";
 
-    let lastScrollTop = 0;
-    window.onscroll = function() {
-      let st = window.pageYOffset || document.documentElement.scrollTop;
-      if (st > lastScrollTop){
-          // downscroll code
-          title.innerHTML = "MOCKINGJAY";
+    window.addEventListener('scroll', function() {
+      let scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+      title.style.opacity = 1 - scrollPosition / 500;
+      if (scrollPosition < 100) {
+        title.innerHTML = "JAD";
       } else {
-          // upscroll code
-          title.innerHTML = "JAD";
+        title.innerHTML = "MOCKINGJAY";
       }
-      lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
-    };
+      
+      document.body.style.backgroundColor = `rgba(${255}, ${165}, ${0}, ${scrollPosition / 2000})`; // Transition to sunrise orange
+
+      if (scrollPosition > 0) {
+        warning.style.display = "none";
+      } else {
+        warning.style.display = "block";
+      }
+    });
   }
 </script>
 
