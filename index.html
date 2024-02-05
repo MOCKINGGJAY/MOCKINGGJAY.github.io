@@ -10,7 +10,6 @@
     padding: 0;
     height: 200%;
     overflow-x: hidden;
-    background-color: #FF4500; /* Fire red background */
     transition: background-color 1s ease;
   }
   .message {
@@ -20,35 +19,47 @@
     transform: translate(-50%, -50%);
     font-family: Arial, sans-serif;
     text-align: center;
-    display: none; /* Initially hidden */
   }
   .title, .warning {
     display: none; /* Initially hide the previous page content */
+    text-align: center;
+    width: 100%;
+  }
+  .title {
+    font-size: 2em;
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .warning {
+    font-size: 1.5em;
   }
 </style>
 </head>
 <body>
 
-<div id="initialMessage" class="message" style="color: lightblue;"></div>
-<div class="title" id="title"></div>
+<div id="initialMessage" class="message"></div>
+<div class="title" id="title">MOCKINGJAY</div>
 <div class="warning" id="warning">Don't scroll down</div>
 
 <script>
   let messages = [
     { text: "Launching rockets 🚀...", duration: 4000, color: "lightblue", backgroundColor: "#FF4500" },
     { text: "Communicating with the satellite", duration: 3000, color: "purple", backgroundColor: "gray" },
-    { text: "Landing", duration: 5000, color: "black", backgroundColor: "white", bigText: true }
+    { text: "Landing", duration: 2000, color: "black", backgroundColor: "white", bigText: true }
   ];
 
   function typeMessage(message, element, callback) {
     let index = 0;
     element.innerHTML = "";
+    element.style.display = "block";
     element.style.color = message.color;
     document.body.style.backgroundColor = message.backgroundColor;
     if (message.bigText) {
       element.style.fontSize = "3em";
     } else {
-      element.style.fontSize = "2em";
+      element.style.fontSize = "1em";
     }
 
     let typingInterval = setInterval(() => {
@@ -59,13 +70,12 @@
         clearInterval(typingInterval);
         callback();
       }
-    }, 50);
+    }, 120); // Speed of typing effect
   }
 
   function showMessage(index) {
     if (index < messages.length) {
       const initialMessage = document.getElementById('initialMessage');
-      initialMessage.style.display = "block";
       typeMessage(messages[index], initialMessage, () => {
         setTimeout(() => {
           showMessage(index + 1);
@@ -82,18 +92,24 @@
   function startMockingjayPage() {
     document.body.style.backgroundColor = "#000080"; // Night blue
     const title = document.getElementById('title');
-    title.innerHTML = "MOCKINGJAY";
     title.style.color = "#FF4500";
     title.style.display = "block";
     document.getElementById('warning').style.display = "block";
 
     let lastScrollTop = 0;
     window.onscroll = function() {
-      var scroll = document.documentElement.scrollTop || document.body.scrollTop;
-      var opacity = 1 - (scroll / 500);
-      title.style.opacity = opacity;
-      
-      var colorChangePoint = 200;
-      if (scroll > colorChangePoint) {
-        var colorIntensity = Math.min(1, (scroll - colorChangePoint) / 300);
-        var r = Math.floor(0 + colorIntensity * (255
+      let st = window.pageYOffset || document.documentElement.scrollTop;
+      if (st > lastScrollTop){
+          // downscroll code
+          title.innerHTML = "MOCKINGJAY";
+      } else {
+          // upscroll code
+          title.innerHTML = "JAD";
+      }
+      lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
+    };
+  }
+</script>
+
+</body>
+</html>
